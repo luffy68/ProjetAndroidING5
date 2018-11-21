@@ -13,5 +13,10 @@ public class MainActivity extends AppCompatActivity {
         //Adrien
 
         // YOLO
+
+        /*
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+                */
     }
 }
