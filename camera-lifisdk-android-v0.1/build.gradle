@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('camera-lifisdk-android-v0.1.aar'))
