@@ -12,9 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.heiligenstein.lucas.projetandroiding5.R;
+import com.heiligenstein.lucas.projetandroiding5.utils.AsyncTask;
 import com.lize.oledcomm.camera_lifisdk_android.ILiFiPosition;
 import com.lize.oledcomm.camera_lifisdk_android.LiFiSdkManager;
 import com.lize.oledcomm.camera_lifisdk_android.V1.LiFiLocationManagerV1;
+
+import java.util.concurrent.ExecutionException;
 
 public class LifiActivity extends AppCompatActivity {
 
@@ -49,6 +52,17 @@ public class LifiActivity extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
+
+        AsyncTask tacheArriereGroupe = new AsyncTask(this);
+        tacheArriereGroupe.execute();
+
+        try {
+            String resultatTache = tacheArriereGroupe.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
     }
 
