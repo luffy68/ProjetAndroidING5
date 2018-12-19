@@ -17,9 +17,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.heiligenstein.lucas.projetandroiding5.Activity.LifiActivity;
@@ -32,10 +34,16 @@ public class MainActivity extends AppCompatActivity {
     private LatLng latLng;
     private TextView textviewLatLong;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+       // Crashlytics.getInstance().crash(); // Force a crash
 
         // Recuperation D'un token
         recuperationTokenFirebase();
