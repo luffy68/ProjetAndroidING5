@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Projet Android ING5</string>
+    <string name="text_main_activity">Voici votre position actuelle (Latitude/Longitude)</string>
 </resources>

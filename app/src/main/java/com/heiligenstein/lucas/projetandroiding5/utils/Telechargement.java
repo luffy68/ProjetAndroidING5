@@ -27,8 +27,9 @@ public class Telechargement {
 
 
 
+        Log.e("AZERTY", "LUCASC");
         try {
-            URL url = new URL("https://fcm.googleapis.com/v1/projects/Ing5Android/messages:send HTTP/1.1");
+            URL url = new URL("https://fcm.googleapis.com/fcm/send");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
@@ -82,6 +83,8 @@ public class Telechargement {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Log.e("AZERTY", "LUCASC2");
         return "";
     }
 }

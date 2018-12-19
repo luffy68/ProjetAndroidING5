@@ -1,8 +1,11 @@
 package com.heiligenstein.lucas.projetandroiding5;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -14,13 +17,20 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.heiligenstein.lucas.projetandroiding5.Activity.LifiActivity;
+import com.heiligenstein.lucas.projetandroiding5.Activity.MapsActivity;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
+
+    private LatLng latLng;
+    private TextView textviewLatLong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +40,17 @@ public class MainActivity extends AppCompatActivity {
         // Recuperation D'un token
         recuperationTokenFirebase();
 
+        // Authorisation pour avoir la caméra
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.CAMERA},
+                1);
 
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         // Mettre une bar en haut avec titre
         Toolbar toolbar = findViewById(R.id.id_toolbar);
@@ -38,42 +58,49 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
         ((TextView) findViewById(R.id.id_toolbar_titre)).setText("Projet MICHEL - HEILIGENSTEIN");
 
-        // Authorisation pour avoir la caméra
-
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.CAMERA},
-                1);
-
-
-        FloatingActionButton myFab = (FloatingActionButton) findViewById(R.id.fab);
-        myFab.setOnClickListener(new View.OnClickListener() {
+        // Action quand on click sur le floating button Lifi
+        FloatingActionButton myFabLifi = findViewById(R.id.fab);
+        myFabLifi.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-
-                /*
-// This registration token comes from the client FCM SDKs.
-                String registrationToken = "YOUR_REGISTRATION_TOKEN";
-
-// See documentation on defining a message payload.
-                Message message = Message.builder()
-                        .putData("score", "850")
-                        .putData("time", "2:45")
-                        .setToken(registrationToken)
-                        .build();
-
-// Send a message to the device corresponding to the provided
-// registration token.
-                String response = FirebaseMessaging.getInstance().send(message);
-// Response is a message ID string.
-                System.out.println("Successfully sent message: " + response);
-*/
-
 
                 Intent intent = new Intent(MainActivity.this, LifiActivity.class);
                 startActivity(intent);
-                finish();
+                onPause();
             }
         });
+
+        // Action quand on click sur le floating button Map
+        FloatingActionButton myFabMap = findViewById(R.id.fabMap);
+        myFabMap.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
+                onPause();
+            }
+        });
+
+
+        textviewLatLong = findViewById(R.id.textView2);
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        double longitude = location.getLongitude();
+        double latitude = location.getLatitude();
+
+        textviewLatLong.setText(latitude + " / "+ longitude);
+        Log.e("latlat",latitude + " ----> "+ longitude);
+
+
     }
 
     @Override
@@ -113,5 +140,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 }
