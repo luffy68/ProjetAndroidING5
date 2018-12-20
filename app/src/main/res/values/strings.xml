@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Projet Android ING5</string>
     <string name="text_main_activity">Voici votre position actuelle (Latitude/Longitude)</string>
+    <string name="share">Share with SMS</string>
+    <string name="hint_numero_number">06...</string>
+    <string name="envoyer_nouvelle_position">Envoyer la nouvelle position</string>
+    <string name="messageEnvoye">Message envoyé</string>
+    <string name="mauvaisNombre">Il faut des nombres pour que ça fonctionne....</string>
+    <string name="nomProjet">MICHEL - HEILIGENSTEIN - SOUEID</string>
 </resources>

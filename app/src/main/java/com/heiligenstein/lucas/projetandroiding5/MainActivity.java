@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private double longitude;
     private double latitude;
 
+    Resources res;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +50,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-       // Crashlytics.getInstance().crash(); // Force a crash
 
         // Recuperation D'un token
         recuperationTokenFirebase();
 
         // Authorisation pour avoir la caméra
         ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.CAMERA, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE},
+                new String[]{Manifest.permission.CAMERA, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION},
                 1);
         //ActivityCompat.requestPermissions(MainActivity.this,new String[]{},1);
 
@@ -66,11 +67,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        res = this.getResources();
         // Mettre une bar en haut avec titre
         Toolbar toolbar = findViewById(R.id.id_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
-        ((TextView) findViewById(R.id.id_toolbar_titre)).setText("Projet MICHEL - HEILIGENSTEIN");
+        ((TextView) findViewById(R.id.id_toolbar_titre)).setText(res.getString(R.string.nomProjet));
 
         // Action quand on click sur le floating button Lifi
         FloatingActionButton myFabLifi = findViewById(R.id.fab);
@@ -112,9 +114,6 @@ public class MainActivity extends AppCompatActivity {
         latitude = location.getLatitude();
 
         textviewLatLong.setText(latitude + " / "+ longitude);
-        Log.e("latlat",latitude + " ----> "+ longitude);
-
-
     }
 
     @Override
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             case 1: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show();
-
+                    textviewLatLong.setText(latitude + " / "+ longitude);
                 } else {
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
                 }
@@ -146,17 +145,13 @@ public class MainActivity extends AppCompatActivity {
 
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
-
-                        Log.d("Tokeb", token);
                         Toast.makeText(MainActivity.this, token, Toast.LENGTH_LONG).show();
                     }
                 });
-
-
     }
 
+    // Partager position avec SMS
     public void share(View v) {
-
         EditText phone = findViewById(R.id.etPhone);
         String num = phone.getText().toString();
 
