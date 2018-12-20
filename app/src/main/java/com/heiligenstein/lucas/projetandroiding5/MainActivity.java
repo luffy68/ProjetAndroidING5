@@ -12,8 +12,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
+    private double longitude;
+    private double latitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Authorisation pour avoir la caméra
         ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.CAMERA},
+                new String[]{Manifest.permission.CAMERA, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE},
                 1);
+        //ActivityCompat.requestPermissions(MainActivity.this,new String[]{},1);
 
     }
 
@@ -102,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        latitude = location.getLatitude();
 
         textviewLatLong.setText(latitude + " / "+ longitude);
         Log.e("latlat",latitude + " ----> "+ longitude);
@@ -146,6 +152,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+
+    }
+
+    public void share(View v) {
+
+        EditText phone = findViewById(R.id.etPhone);
+        String num = phone.getText().toString();
+
+        String message = latitude + ";" + longitude;
+
+        SmsManager.getDefault().sendTextMessage(num, null, message, null, null);
 
     }
 }
