@@ -38,11 +38,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double latitude;
     private  double longitude;
 
-    private TextView tLatitude;
-    private TextView tLongitude;
+   /* private TextView tLatitude;
+    private TextView tLongitude; */
+    private TextView friendLocation;
 
     private TextView tAfficherLatLongPourEnvoyer;
     private EditText tNumero;
+
+    private String localisationToSend = "";
 
     Resources res;
 
@@ -63,8 +66,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         res = this.getResources();
         dialogAfficherNouvellePosition = new Dialog(MapsActivity.this);
         dialogAfficherNouvellePosition.setContentView(R.layout.dialog_put_lat_long);
-        tLatitude = dialogAfficherNouvellePosition.findViewById(R.id.editTextLatitude);
-        tLongitude = dialogAfficherNouvellePosition.findViewById(R.id.editTextLongitude);
+        /*tLatitude = dialogAfficherNouvellePosition.findViewById(R.id.editTextLatitude);
+        tLongitude = dialogAfficherNouvellePosition.findViewById(R.id.editTextLongitude); */
+        friendLocation = dialogAfficherNouvellePosition.findViewById(R.id.editTextLocation);
 
         dialogEnvoyerNouvellePositionDepuisMap = new Dialog(MapsActivity.this);
         dialogEnvoyerNouvellePositionDepuisMap.setContentView(R.layout.dialog_send_position_from_map);
@@ -123,7 +127,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     List<Address> addresses = geocoder.getFromLocation(latln.latitude, latln.longitude, 1);
                     Address address = addresses.get(0);
                     tAfficherLatLongPourEnvoyer.setText(address.getCountryName()+ " : " +address.getLocality() + " \n "+latln.latitude + "," + latln.longitude);
+                    localisationToSend = latln.latitude + ";" + latln.longitude;
                     dialogEnvoyerNouvellePositionDepuisMap.show();
+
 
                     latitude = latln.latitude;
                     longitude = latln.longitude;
@@ -138,7 +144,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Aficher nouvelle position sur
     public void butonShowOnMapPosition(View v){
         try {
-            LatLng me = new LatLng(Double.parseDouble(tLatitude.getText().toString()), Double.parseDouble(tLongitude.getText().toString()));
+            String friendLocationText = friendLocation.getText().toString();
+            String[] fLTable = friendLocationText.split(";");
+            LatLng me = new LatLng(Double.parseDouble(fLTable[0]), Double.parseDouble(fLTable[1]));
             mMap.addMarker(new MarkerOptions().position(me).title("Marker me"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(me));
         }catch (NumberFormatException e){
@@ -148,8 +156,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void butonEnvoyerSmsNouvellePosition(View v){
-        SmsManager.getDefault().sendTextMessage(tNumero.getText().toString(), null, tAfficherLatLongPourEnvoyer.getText().toString(), null, null);
-        dialogEnvoyerNouvellePositionDepuisMap.cancel();
-        Toast.makeText(this, res.getString(R.string.messageEnvoye), Toast.LENGTH_LONG).show();
+        try {
+            SmsManager.getDefault().sendTextMessage(tNumero.getText().toString(), null, localisationToSend, null, null);
+            dialogEnvoyerNouvellePositionDepuisMap.cancel();
+            Toast.makeText(this, res.getString(R.string.messageEnvoye), Toast.LENGTH_LONG).show();
+        }catch (Exception e){
+            Toast.makeText(this, res.getString(R.string.mauvaisNombre), Toast.LENGTH_LONG).show();
+        }
     }
 }

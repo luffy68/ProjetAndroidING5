@@ -7,4 +7,5 @@
     <string name="messageEnvoye">Message envoyé</string>
     <string name="mauvaisNombre">Il faut des nombres pour que ça fonctionne....</string>
     <string name="nomProjet">MICHEL - HEILIGENSTEIN - SOUEID</string>
+    <string name="pas_friend_location">Your friend</string>
 </resources>

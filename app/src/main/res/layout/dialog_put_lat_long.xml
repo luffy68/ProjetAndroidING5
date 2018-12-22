@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/editTextLatitude"
+        android:id="@+id/editTextLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="38dp"
@@ -15,14 +15,14 @@
         android:layout_marginStart="84dp"
         android:layout_marginTop="85dp"
         android:ems="10"
-        android:hint="Latitude"
+        android:hint="@string/pas_friend_location"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editTextLongitude"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+<!--
     <EditText
+    app:layout_constraintBottom_toTopOf="@+id/editTextLongitude"
         android:id="@+id/editTextLongitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextLatitude" />
-
+-->
     <Button
         android:id="@+id/buttonShowNewPosition"
         android:layout_width="wrap_content"
