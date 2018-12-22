@@ -146,9 +146,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             String friendLocationText = friendLocation.getText().toString();
             String[] fLTable = friendLocationText.split(";");
-            LatLng me = new LatLng(Double.parseDouble(fLTable[0]), Double.parseDouble(fLTable[1]));
-            mMap.addMarker(new MarkerOptions().position(me).title("Marker me"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(me));
+
+            if(fLTable.length < 2 ||
+                    android.text.TextUtils.isDigitsOnly(fLTable[0]) || android.text.TextUtils.isDigitsOnly(fLTable[1])){
+                Toast.makeText(MapsActivity.this, res.getString(R.string.mauvaisNombre), Toast.LENGTH_LONG).show();
+            }
+            else {
+                LatLng me = new LatLng(Double.parseDouble(fLTable[0]), Double.parseDouble(fLTable[1]));
+                mMap.addMarker(new MarkerOptions().position(me).title("Marker me"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(me));
+            }
         }catch (NumberFormatException e){
             Toast.makeText(this, res.getString(R.string.mauvaisNombre), Toast.LENGTH_LONG).show();
         }
@@ -156,12 +163,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void butonEnvoyerSmsNouvellePosition(View v){
-        try {
-            SmsManager.getDefault().sendTextMessage(tNumero.getText().toString(), null, localisationToSend, null, null);
+
+        String num = tNumero.getText().toString();
+
+        if (num.length() <= 0 || ! android.text.TextUtils.isDigitsOnly(num)){
+            Toast.makeText(MapsActivity.this, res.getString(R.string.incorrect_phone_number), Toast.LENGTH_LONG).show();
+        }
+        else {
+            SmsManager.getDefault().sendTextMessage(num, null, localisationToSend, null, null);
             dialogEnvoyerNouvellePositionDepuisMap.cancel();
             Toast.makeText(this, res.getString(R.string.messageEnvoye), Toast.LENGTH_LONG).show();
-        }catch (Exception e){
-            Toast.makeText(this, res.getString(R.string.mauvaisNombre), Toast.LENGTH_LONG).show();
         }
+
     }
 }

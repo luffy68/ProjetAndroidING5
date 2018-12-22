@@ -30,6 +30,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.heiligenstein.lucas.projetandroiding5.Activity.LifiActivity;
 import com.heiligenstein.lucas.projetandroiding5.Activity.MapsActivity;
 
+
 import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Authorisation pour avoir la caméra
         ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.CAMERA, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION},
+                new String[]{Manifest.permission.CAMERA, Manifest.permission.SEND_SMS,
+                        Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION},
                 1);
         //ActivityCompat.requestPermissions(MainActivity.this,new String[]{},1);
 
@@ -152,12 +154,20 @@ public class MainActivity extends AppCompatActivity {
 
     // Partager position avec SMS
     public void share(View v) {
+
         EditText phone = findViewById(R.id.etPhone);
         String num = phone.getText().toString();
 
-        String message = latitude + ";" + longitude;
 
-        SmsManager.getDefault().sendTextMessage(num, null, message, null, null);
+        if (num.length() <= 0 || ! android.text.TextUtils.isDigitsOnly(num)){
+            Toast.makeText(MainActivity.this, res.getString(R.string.incorrect_phone_number), Toast.LENGTH_LONG).show();
+        }
+        else {
+            String message = latitude + ";" + longitude;
+
+            SmsManager.getDefault().sendTextMessage(num, null, message, null, null);
+            Toast.makeText(MainActivity.this, res.getString(R.string.messageEnvoye), Toast.LENGTH_LONG).show();
+        }
 
     }
 }
