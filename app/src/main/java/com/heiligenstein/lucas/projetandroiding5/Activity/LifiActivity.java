@@ -2,6 +2,7 @@ package com.heiligenstein.lucas.projetandroiding5.Activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +22,9 @@ import java.util.concurrent.ExecutionException;
 
 public class LifiActivity extends AppCompatActivity {
 
-
     private LiFiSdkManager liFiSdkManager;
     private TextView t;
+    private Resources res;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class LifiActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        res = this.getResources();
         AsyncTask tacheArriereGroupe = new AsyncTask(this);
         tacheArriereGroupe.execute();
 
@@ -95,8 +97,6 @@ public class LifiActivity extends AppCompatActivity {
          *  If there was an error, lamp could contain the text "No lamp detected" or "Weak signal".
          */
                             t.setText(lamp);
-
-                            Log.e("EEEE","AAAAAA");
                         }
                     });
 
@@ -105,7 +105,7 @@ public class LifiActivity extends AppCompatActivity {
                     liFiSdkManager.start();
 
                 } else {
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, res.getString(R.string.permission_denied), Toast.LENGTH_LONG).show();
                 }
                 return;
             }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
@@ -33,35 +35,35 @@ import com.heiligenstein.lucas.projetandroiding5.Activity.MapsActivity;
 
 import org.w3c.dom.Text;
 
+import java.util.List;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
-    private LatLng latLng;
     private TextView textviewLatLong;
-
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     private double longitude;
     private double latitude;
 
-    Resources res;
+    // Permet de récupérer les valeurs dans le fichier res/values/strings.xml
+    private Resources res;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        // Cette variable permet d'intancier le FireBase Analytic
+        FirebaseAnalytics.getInstance(this);
 
-        // Recuperation D'un token
+        // Recuperation D'un token pour les messages FireBase
         recuperationTokenFirebase();
 
-        // Authorisation pour avoir la caméra
+        // Les authorisations
         ActivityCompat.requestPermissions(MainActivity.this,
                 new String[]{Manifest.permission.CAMERA, Manifest.permission.SEND_SMS,
                         Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION},
                 1);
-        //ActivityCompat.requestPermissions(MainActivity.this,new String[]{},1);
-
     }
 
 
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         longitude = location.getLongitude();
         latitude = location.getLatitude();
@@ -122,32 +125,25 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
+                // Si la permission de la localisation est activé, alors on peut l'afficher les coordonnées
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, res.getString(R.string.permission_localisation_authorisee), Toast.LENGTH_LONG).show();
                     textviewLatLong.setText(latitude + " / "+ longitude);
                 } else {
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, res.getString(R.string.permission_localisation_non_authorisee), Toast.LENGTH_LONG).show();
                 }
                 return;
             }
         }
     }
 
-
-
     private void recuperationTokenFirebase(){
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("Erreur", "getInstanceId failed", task.getException());
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_LONG).show();
+                        // Recuperation du token
+                        task.getResult().getToken();
                     }
                 });
     }
@@ -158,13 +154,11 @@ public class MainActivity extends AppCompatActivity {
         EditText phone = findViewById(R.id.etPhone);
         String num = phone.getText().toString();
 
-
         if (num.length() <= 0 || ! android.text.TextUtils.isDigitsOnly(num)){
             Toast.makeText(MainActivity.this, res.getString(R.string.incorrect_phone_number), Toast.LENGTH_LONG).show();
         }
         else {
             String message = latitude + ";" + longitude;
-
             SmsManager.getDefault().sendTextMessage(num, null, message, null, null);
             Toast.makeText(MainActivity.this, res.getString(R.string.messageEnvoye), Toast.LENGTH_LONG).show();
         }

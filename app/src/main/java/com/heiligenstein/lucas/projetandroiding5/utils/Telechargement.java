@@ -25,9 +25,6 @@ public class Telechargement {
 
     static String envoiNotificationFirebase(Context context) {
 
-
-
-        Log.e("AZERTY", "LUCASC");
         try {
             URL url = new URL("https://fcm.googleapis.com/fcm/send");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -47,6 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private String localisationToSend = "";
 
+    // Permet de récupérer les valeurs dans le fichier res/values/strings.xml
     Resources res;
 
     @Override

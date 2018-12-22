@@ -9,4 +9,7 @@
     <string name="nomProjet">MICHEL - HEILIGENSTEIN - SOUEID</string>
     <string name="pas_friend_location">Your friend</string>
     <string name="incorrect_phone_number">Please write correct phone number</string>
+    <string name="permission_localisation_authorisee">Permission localisation authorisée</string>
+    <string name="permission_localisation_non_authorisee">Permission Localisation non authorisée</string>
+    <string name="permission_denied">Permission denied</string>
 </resources>
